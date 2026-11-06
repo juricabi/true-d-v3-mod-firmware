@@ -3,7 +3,7 @@
 All versions are mods of the Furious FPV True-D V3 firmware 3.9D.  The version shows on the boot
 screen under `TRUE-D REV 3.9`.
 
-## MOD 1.12
+## MOD 1.13 (first public release)
 
 - Beeps play in the background (stock: 75 ms in which nothing else ran, on every key press).
 - Goggle-bay link: no packet in the 30 ms after a retune (it spoiled the scanner, search and

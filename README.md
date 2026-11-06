@@ -14,8 +14,8 @@ touched, so you can always go back.
   the new ELRS and RX TUNE items.</em>
 </p>
 
-**Download:** [`firmware/TrueD-MOD-1.12.hex`](firmware/TrueD-MOD-1.12.hex), or the latest
-[release](../../releases).  The boot screen shows `MOD 1.12` under `TRUE-D REV 3.9`.
+**Download:** [`firmware/TrueD-MOD-1.13.hex`](firmware/TrueD-MOD-1.13.hex), or the latest
+[release](../../releases).  The boot screen shows `MOD 1.13` under `TRUE-D REV 3.9`.
 
 ## What is better than stock
 
@@ -36,13 +36,13 @@ from bad saved data, reversed FILTER labels, display freezes, the goggle-bay lin
 
 ## Install
 
-1. **Download** `TrueD-MOD-1.12.hex`.
+1. **Download** `TrueD-MOD-1.13.hex`.
 2. **Connect** the True-D to the PC with its USB port.  If an ELRS backpack is wired to D0,
    disconnect or unpower it first (D0 is shared with the USB serial line).
 3. **Flash with XLoader:** device `Duemilanove/Nano(ATmega328)`, baud rate `57600`, the module's COM
    port, Upload.  Or with avrdude:
    ```
-   avrdude -p m328p -c stk500v1 -b 57600 -P COM5 -D -U flash:w:TrueD-MOD-1.12.hex:i
+   avrdude -p m328p -c stk500v1 -b 57600 -P COM5 -D -U flash:w:TrueD-MOD-1.13.hex:i
    ```
    (COM10 and up: `-P \\.\COM10` with old avrdude versions.)
 4. **Calibrate once** (below).  A unit coming from another firmware asks for it at power-up; OK
