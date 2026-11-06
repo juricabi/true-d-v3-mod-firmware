@@ -7,6 +7,13 @@ touched, so you can always go back.
 > Unofficial.  Not made, endorsed or supported by Furious FPV.  Use it at your own risk; see
 > [NOTICE.md](NOTICE.md).
 
+<p align="center">
+  <img src="images/true-d-v3-mod.jpg" width="460" alt="True-D V3 module with this firmware on the goggles, showing the Settings menu with the ELRS and RX TUNE items">
+  <br>
+  <em>A True-D V3 with this firmware, in a 3D-printed case on the goggles.  The Settings menu shows
+  the new ELRS and RX TUNE items.</em>
+</p>
+
 **Download:** [`firmware/TrueD-MOD-1.12.hex`](firmware/TrueD-MOD-1.12.hex), or the latest
 [release](../../releases).  The boot screen shows `MOD 1.12` under `TRUE-D REV 3.9`.
 
