@@ -14,8 +14,8 @@ touched, so you can always go back.
   the new ELRS and RX TUNE items.</em>
 </p>
 
-**Download:** [`firmware/TrueD-MOD-1.13.hex`](firmware/TrueD-MOD-1.13.hex), or the latest
-[release](../../releases).  The boot screen shows `MOD 1.13` under `TRUE-D REV 3.9`.
+**Download:** [`firmware/TrueD-MOD-1.15.hex`](firmware/TrueD-MOD-1.15.hex), or the latest
+[release](../../releases).  The boot screen shows `MOD 1.15` under `TRUE-D REV 3.9`.
 
 ## What is better than stock
 
@@ -26,6 +26,9 @@ touched, so you can always go back.
 | **Antennas** | each receiver scaled to its own calibration maximum (a patch's real gain is scaled away) | each receiver measured above its own noise floor: 2 omnis, 2 patches or omni + patch all work |
 | **Tuning** | fixed channel frequency | **RX TUNE**: centres both receivers on your VTX at every channel change |
 | **Band scanner** | BEST rotates between neighbouring channels, names noise when no VTX is on | BEST names the VTX's own channel and its measured MHz; `--` when nothing is there |
+| **Smart search** | every channel above 70 % of the calibrated level, in frequency order; weak VTXs missed | each VTX's own channel first, strongest first (weak VTXs too), then the other channels it was found on; Wi-Fi bursts filtered |
+| **Quad finder** | silent below 70 % | beeps from ~6 %, faster the stronger; a line marks the highest level |
+| **Antenna check** | — | the main menu shows each receiver's share of the time (`A62 B38`): a dead antenna stands out |
 | **ELRS** | — | optional VRx backpack: the module follows VTX channel changes from your radio, telemetry on the OLED |
 | **Sync mod** | — | optional LM1881: switches inside the sync pulses, invisible in the picture |
 | **Beeps** | each beep freezes the module for 75 ms | play in the background |
@@ -36,17 +39,17 @@ from bad saved data, reversed FILTER labels, display freezes, the goggle-bay lin
 
 ## Install
 
-1. **Download** `TrueD-MOD-1.13.hex`.
+1. **Download** `TrueD-MOD-1.15.hex`.
 2. **Connect** the True-D to the PC with its USB port.  If an ELRS backpack is wired to D0,
    disconnect or unpower it first (D0 is shared with the USB serial line).
 3. **Flash with XLoader:** device `Duemilanove/Nano(ATmega328)`, baud rate `57600`, the module's COM
    port, Upload.  Or with avrdude:
    ```
-   avrdude -p m328p -c stk500v1 -b 57600 -P COM5 -D -U flash:w:TrueD-MOD-1.13.hex:i
+   avrdude -p m328p -c stk500v1 -b 57600 -P COM5 -D -U flash:w:TrueD-MOD-1.15.hex:i
    ```
    (COM10 and up: `-P \\.\COM10` with old avrdude versions.)
 4. **Calibrate once** (below).  A unit coming from another firmware asks for it at power-up; OK
-   keeps the old calibration.
+   keeps the old calibration.  Coming from MOD 1.13, the calibration stays valid.
 
 **Going back to stock:** flash the stock 3.9D hex the same way.  Your settings stay valid.
 
@@ -67,7 +70,7 @@ The menus and buttons work as in the stock firmware.  The Settings list scrolls:
 |---|---|---|
 | `ALARM` | NONE / 20 / 35 / 50 % | RSSI alarm beep (stock) |
 | `AUTO LOCK` | ON / OFF | lock the buttons 8 s after the last key (stock) |
-| `FILTER` | LOW / NORMAL / HIGH | how calm the diversity is: LOW = fastest, HIGH = calmest (stock had the labels reversed) |
+| `FILTER` | LOW / NORMAL / HIGH | how calm the diversity is: LOW = fastest, HIGH = calmest (stock had the labels reversed); it also sets how deep a fade must be for an instant switch |
 | name | 10 characters | the pilot name banner (stock) |
 | `ELRS` | ON / OFF | ELRS VRx backpack on D0, default OFF |
 | `RX TUNE` | AUTO / OFF | automatic receiver tuning, default AUTO |
@@ -79,8 +82,13 @@ The menus and buttons work as in the stock firmware.  The Settings list scrolls:
 - **Right of the channel box:** the RX TUNE offset measured at this channel change (`+2`, `-2`,
   `+0`), or `--` when it was not measured (no signal at that moment).  With the sync mod, `S` above
   and `V` below it show the line sync and the vertical sync.
-- **Top line:** the pilot name, or ELRS telemetry (`LQ99 -67`, `16.4V 45%`, `1234mAh`) while the
+- **Top line:** the pilot name, or ELRS telemetry (`LQ99 -67`, `16.4V 45%`, `1234MAH`) while the
   backpack sends it.
+- **Main menu, bottom left:** the antenna check, `A62 B38`: how much of the time since the last
+  channel change each receiver was in use, counted while the signal was weak enough for the choice to
+  matter.  It appears once the signal has faded a few times
+  (in flight, or walking away with the quad); on the bench with a strong signal there is nothing to
+  compare, so it stays empty.  Both antennas fine: roughly even; a dead antenna or receiver: ~0 %.
 
 ## RX TUNE
 
@@ -91,7 +99,11 @@ The receiver's synthesizer works in 2 MHz steps, so finer tuning is not possible
 
 - **When:** only at a channel change.  Nothing starts a measurement in flight by itself: not a signal
   dropout, not a returning signal, not a timer.
-- **Cost:** about 0.2 s from the change to the result, with the picture briefly blanked a few times.
+- **Cost:** 0.14–0.21 s from the change to the result, with the picture briefly blanked a few times.
+- **Lists** (ALL, SAVED, SEARCH): stepping through tunes each channel at once with its stored offset;
+  the measurement follows after 0.4 s on a channel.
+- **Power-up:** the receivers are tuned before the boot screen, so the picture is there at once; the
+  measurement follows after the boot screen.
 - **Swapped quads on the same channel:** step one channel away and back to measure the new VTX.
 - **No signal at the change** (quad switched on after the goggles): `--`, and the last offset for
   that channel stays.  Step away and back once the quad is on.
@@ -103,8 +115,12 @@ The receiver's synthesizer works in 2 MHz steps, so finer tuning is not possible
   signal, and the measured MHz is shown under it.  It changes only when two sweeps agree, and shows
   `--` when nothing is clearly above the noise.  Channels only 1–5 MHz apart (e.g. B1/R3, R1/E3) are
   closer than a VTX's own frequency error, so read the MHz too.
-- **Smart search:** lists the channels above 70 % of the calibrated level, with the VTX's own channel
-  first.  A weak VTX is not found; use the band scanner for that.
+- **Smart search:** lists each VTX's own channel first, strongest first, then the other channels the
+  same VTXs were found on (as stock).  It finds VTXs down to 20 % of the calibrated range (stock: 70 %),
+  and every channel is read twice, so a Wi-Fi burst is not listed as a VTX.
+- **Quad finder:** the stronger receiver's level as a bar and a percentage.  It beeps from ~6 %, faster
+  the stronger, and a line marks the highest level since you opened it: walk back when the bar drops
+  below the line.
 
 ## Optional hardware
 
@@ -119,6 +135,9 @@ The receiver's synthesizer works in 2 MHz steps, so finer tuning is not possible
 - Tested on one True-D V3: bench tests, a walk with the quad, RSSI recordings of the receivers
   (noise floor, lock times, passband, fading), and a multi-agent code review with every finding
   verified.
+- MOD 1.15 was tested on the unit feature by feature, driven from a PC (keys, screen dumps, the raw RSSI
+  stream; the PC also played the ELRS backpack), and checked in a board simulator that runs the real
+  firmware image against modelled receivers, VTXs, fading, goggles, an ELRS backpack and an LM1881.
 - **Not yet flight-tested** against stock with a DVR.
 - The ELRS backpack and the sync mod are implemented and reviewed, but not yet tried with real
   hardware.

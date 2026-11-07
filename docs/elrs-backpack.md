@@ -11,9 +11,10 @@ With an ExpressLRS VRx backpack wired to the True-D:
 |---|---|---|
 | link | `LQ99 -67` | uplink link quality (%) and RSSI (dBm) |
 | battery | `16.4V 45%` | voltage, and the remaining % from the flight controller when it is below 100 |
-| capacity | `1234mAh` | capacity used, only with a current sensor |
+| capacity | `1234MAH` | capacity used (mAh), only with a current sensor |
 
-It disappears 3 s after the last frame.  There are no alarms.  The OLED is not visible with the
+It disappears 3 s after the link is gone (the TX keeps sending link frames with LQ 0 without a
+receiver; these do not count).  There are no alarms.  The OLED is not visible with the
 goggles on, so this is for before and after the flight, or for a spotter.
 
 ## Setup
@@ -43,9 +44,13 @@ ESP's 3.3 V output is enough for the ATmega's input at 5 V.
 
 - **UART:** 500 kbaud, 8N1 (the TBS Fusion target's rate).  Frames with a bad CRC, a wrong length or a
   UART error are dropped; a noisy line cannot flood the CPU.
-- **During a scan, search or calibration** a channel command waits until the sweep is done.
+- **During a scan, search or calibration** a channel command waits until the sweep is done; it also
+  waits while a popup or the saved-list editor is open.
+- **5880 MHz** is both F8 and R7: it goes to F8 when the current channel is in the F band, else R7.
+- **Repeats:** the backpack sends each change 3 times, 0.5 s apart, so one lost frame is covered.
 - **RX TUNE** measures a channel change from the backpack 0.8 s later, once the VTX has arrived (ELRS
   sends it only while disarmed).
-- **Power-up:** the backpack sends the current channel once, 1–1.5 s after power-up.  If the module did
-  not follow, send the VTX settings again from the radio.
+- **Power-up:** without backpack telemetry, the backpack sends the current channel once, 1–1.5 s after
+  power-up; with backpack telemetry on it does not, and the module starts on its stored channel.  If
+  the module did not follow, send the VTX settings again from the radio.
 - **Status:** implemented and reviewed, not yet tested with a real backpack.

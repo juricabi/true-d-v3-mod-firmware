@@ -7,7 +7,9 @@ few lines.  With a sync separator, the firmware times the switches:
 - a **quality switch** (the other receiver is better on average, the picture is still fine) waits for
   the next vertical sync (at most 16.7 ms NTSC / 20 ms PAL) and lands in the vertical blanking, where
   the goggle has time to settle;
-- a **deep-fade switch** waits only for the next line sync (at most 64 µs).
+- a **deep-fade switch** waits only for the next line sync (at most 64 µs), also when a quality
+  switch is already waiting for the vertical sync;
+- in the first ~0.45 ms after the vertical sync, a clearly better receiver is taken at once.
 
 Without the signals (no mod, or the picture already broken) it switches at once, as before.  No
 firmware change is needed: the same image works with and without the mod.  On the main screen `S`
