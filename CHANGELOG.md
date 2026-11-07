@@ -18,7 +18,8 @@ screen under `TRUE-D REV 3.9`.
   single noisy sweep is dropped.
 - **Diversity:** ~25 % less CPU.  FILTER now also sets how deep a fade must be for an instant switch
   (NORMAL is the same as 1.13).  With the sync mod a deep fade no longer waits behind a pending
-  quality switch.
+  quality switch, and a better receiver is taken right after the vertical sync, but only while the
+  active picture is not good.
 - **RX TUNE:** the picture comes ~2 s sooner at power-up (tuned before the boot screen); the final
   frequency is set 0.14–0.21 s after a change; on the ALL, SAVED and SEARCH lists a channel is measured
   only after 0.4 s on it, so stepping through a list shows the picture; when the retry fails too, the
@@ -28,11 +29,12 @@ screen under `TRUE-D REV 3.9`.
   5880 MHz goes to F8 on the F band, else R7; a channel command waits while a popup or the saved-list
   editor is open.
 - **Goggle-bay link:** no 80 ms stall per goggle reply; malformed commands are ignored; a goggle
-  "start search" is ignored during a calibration or a running search.
+  "start search" is ignored during a calibration or a running search; a channel change from the goggle
+  is measured by RX TUNE after 0.4 s, as on a list.
 - **Receivers:** the tuning bus is driven at the stock speed with extra timing margin.
 - **Keys and screens:** a short tap right after a channel change is no longer lost (stock too); a key
-  still held across a screen change no longer acts on the next screen; the popup closes itself after
-  8 s; DELETE of the last saved channel and SAVE of a listed channel fixed; short pilot names no longer
+  still held across a screen change no longer acts on the next screen; a key press restarts the auto
+  lock; the popup closes itself after 8 s; DELETE of the last saved channel and SAVE of a listed channel fixed; short pilot names no longer
   run into the B label.
 - **Boot:** a damaged stored calibration is detected and the unit asks for a calibration; leftovers of
   another firmware no longer switch ELRS on or RX TUNE off.
