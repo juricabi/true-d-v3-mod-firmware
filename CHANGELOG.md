@@ -3,6 +3,25 @@
 All versions are mods of the Furious FPV True-D V3 firmware 3.9D.  The version shows on the boot
 screen under `TRUE-D REV 3.9`.
 
+## MOD 1.17
+
+- **Goggle control (new): Settings → `BAY`.**  See [docs/goggle-bay.md](docs/goggle-bay.md).
+  - `RAPIDFIRE` (default): ImmersionRC's rapidFIRE SPI commands, as the HDZero goggle with the 3-wire bay mod and
+    the ExpressLRS VRx backpack ("Rapidfire" target) send them.  Only checksummed commands count, a band or channel
+    when two of its copies agree, so a damaged command does not change the channel.  It never drives a bay pin.
+  - `ORQA`: the Orqa FPV.One's rapidFIRE mode.  The goggle sets channel and band, and shows the module's channel on
+    its OSD, also when it is changed on the True-D.  Tested on the unit.
+  - `1-8`: a static 3-bit code on the bay pins is channel 1-8 of the current band (the Orqa's "other" module type,
+    HDZero type Switch).  Tested with the Orqa.
+  - `STEP`: the stock up / down steps for Fat Shark buttons.  Tested with the Orqa's "other" module type.
+  - `BAY CLK`: the pin order of RAPIDFIRE and ORQA; leave it at `D11`.
+- **The stock goggle link (Dock-King) is removed.**  It drove bay pin 3 at 5 V for ~6 s at every power-up, which
+  is not safe in a goggle whose processor pins are wired to the bay (the HDZero 3-wire mod).  The stock firmware
+  and MOD 1.15 keep it.
+- The generic Arduino pin functions are no longer in the image (a corrupted jump into them could have made a bay
+  pin an output); the receivers' tuning bus keeps the stock timing.
+- From MOD 1.13 / 1.15 the calibration and settings stay valid; `BAY` starts in `RAPIDFIRE`.
+
 ## MOD 1.15
 
 - **Antenna check (new):** the main menu shows each receiver's share of the time since the last

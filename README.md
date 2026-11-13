@@ -1,8 +1,8 @@
 # True-D V3 mod firmware (unofficial)
 
-Mod firmware for the **Furious FPV True-D V3** diversity receiver module (Fatshark goggle bay),
-built on the stock 3.9D firmware.  It flashes like the stock firmware, and the bootloader is never
-touched, so you can always go back.
+Mod firmware for the **Furious FPV True-D V3** diversity receiver module (Fatshark-style goggle bay:
+Fat Shark, Orqa FPV.One, HDZero and others), built on the stock 3.9D firmware.  It flashes like the
+stock firmware, and the bootloader is never touched, so you can always go back.
 
 > Unofficial.  Not made, endorsed or supported by Furious FPV.  Use it at your own risk; see
 > [NOTICE.md](NOTICE.md).
@@ -14,8 +14,13 @@ touched, so you can always go back.
   the new ELRS and RX TUNE items.</em>
 </p>
 
-**Download:** [`firmware/TrueD-MOD-1.15.hex`](firmware/TrueD-MOD-1.15.hex), or the latest
-[release](../../releases).  The boot screen shows `MOD 1.15` under `TRUE-D REV 3.9`.
+**Download:** [`firmware/TrueD-MOD-1.17.hex`](firmware/TrueD-MOD-1.17.hex), or the latest
+[release](../../releases).  The boot screen shows `MOD 1.17` under `TRUE-D REV 3.9`.
+
+**New in 1.17: goggle control.**  The module follows the goggle's channel control: the **Orqa FPV.One** (both ways:
+the goggle sets channel and band, and shows the module's channel), Fat Shark buttons, static channel pins, and
+rapidFIRE senders such as the HDZero goggle with the 3-wire bay mod.  Settings → `BAY`; see
+[docs/goggle-bay.md](docs/goggle-bay.md), and read its HDZero section before wiring an HDZero.
 
 ## What is better than stock
 
@@ -29,27 +34,30 @@ touched, so you can always go back.
 | **Smart search** | every channel above 70 % of the calibrated level, in frequency order; weak VTXs missed | each VTX's own channel first, strongest first (weak VTXs too), then the other channels it was found on; Wi-Fi bursts filtered |
 | **Quad finder** | silent below 70 % | beeps from ~6 %, faster the stronger; a line marks the highest level |
 | **Antenna check** | — | the main menu shows each receiver's share of the time (`A62 B38`): a dead antenna stands out |
+| **Goggle control** | the Dock-King link (drives a bay pin at 5 V for ~6 s at power-up) and Fat Shark up / down | `BAY:RAPIDFIRE` (rapidFIRE SPI: HDZero with the 3-wire mod, ExpressLRS backpack), `BAY:ORQA` (Orqa FPV.One, both ways), `BAY:1-8` (static channel pins), `BAY:STEP` (Fat Shark buttons); only `ORQA` ever drives a pin (DATA, low only) |
 | **ELRS** | — | optional VRx backpack: the module follows VTX channel changes from your radio, telemetry on the OLED |
 | **Sync mod** | — | optional LM1881: switches inside the sync pulses, invisible in the picture |
 | **Beeps** | each beep freezes the module for 75 ms | play in the background |
 | **L band** | 5362–5621 MHz | standard LowRace 5333–5613 MHz (same as ELRS and Betaflight) |
 
 Plus fixes for stock bugs: smart search errors, the scanner and calibration readings, a boot hang
-from bad saved data, reversed FILTER labels, display freezes, the goggle-bay link, and more.
+from bad saved data, reversed FILTER labels, display freezes, and more.
 
 ## Install
 
-1. **Download** `TrueD-MOD-1.15.hex`.
-2. **Connect** the True-D to the PC with its USB port.  If an ELRS backpack is wired to D0,
-   disconnect or unpower it first (D0 is shared with the USB serial line).
+1. **Download** `TrueD-MOD-1.17.hex`.
+2. **Connect** the True-D to the PC with its USB port, **outside the goggle**.  If an ELRS backpack is
+   wired to D0, disconnect or unpower it first (D0 is shared with the USB serial line).
 3. **Flash with XLoader:** device `Duemilanove/Nano(ATmega328)`, baud rate `57600`, the module's COM
    port, Upload.  Or with avrdude:
    ```
-   avrdude -p m328p -c stk500v1 -b 57600 -P COM5 -D -U flash:w:TrueD-MOD-1.15.hex:i
+   avrdude -p m328p -c stk500v1 -b 57600 -P COM5 -D -U flash:w:TrueD-MOD-1.17.hex:i
    ```
    (COM10 and up: `-P \\.\COM10` with old avrdude versions.)
 4. **Calibrate once** (below).  A unit coming from another firmware asks for it at power-up; OK
-   keeps the old calibration.  Coming from MOD 1.13, the calibration stays valid.
+   keeps the old calibration.  Coming from MOD 1.13 or 1.15, the calibration stays valid.
+5. **Choose `BAY`** for your goggle (Settings; [docs/goggle-bay.md](docs/goggle-bay.md)).  A unit coming from
+   another firmware starts in `BAY:RAPIDFIRE`.
 
 **Going back to stock:** flash the stock 3.9D hex the same way.  Your settings stay valid.
 
@@ -74,6 +82,8 @@ The menus and buttons work as in the stock firmware.  The Settings list scrolls:
 | name | 10 characters | the pilot name banner (stock) |
 | `ELRS` | ON / OFF | ELRS VRx backpack on D0, default OFF |
 | `RX TUNE` | AUTO / OFF | automatic receiver tuning, default AUTO |
+| `BAY` | RAPIDFIRE / 1-8 / STEP / ORQA | how the goggle sets the channel, default RAPIDFIRE ([docs/goggle-bay.md](docs/goggle-bay.md)) |
+| `BAY CLK` | D11 / D13 | the pin order of RAPIDFIRE and ORQA; leave it at D11 |
 | `--CALIBRATE--` | | see above |
 
 ## Main screen
@@ -138,6 +148,9 @@ The receiver's synthesizer works in 2 MHz steps, so finer tuning is not possible
 - MOD 1.15 was tested on the unit feature by feature, driven from a PC (keys, screen dumps, the raw RSSI
   stream; the PC also played the ELRS backpack), and checked in a board simulator that runs the real
   firmware image against modelled receivers, VTXs, fading, goggles, an ELRS backpack and an LM1881.
+- MOD 1.17's goggle control was tested on the unit in an Orqa FPV.One (`ORQA`, `1-8`, `STEP`) and in the board
+  simulator against models of the HDZero goggle, the ExpressLRS backpack and the Orqa, with noise, wrong wiring
+  and other protocols (1,120 checks).  `RAPIDFIRE` has not met a real HDZero or ExpressLRS backpack yet.
 - **Not yet flight-tested** against stock with a DVR.
 - The ELRS backpack and the sync mod are implemented and reviewed, but not yet tried with real
   hardware.

@@ -7,8 +7,12 @@ not made, endorsed or supported by Furious FPV. "Furious FPV" and "True-D" are n
 owners and are used here only to say which hardware this firmware is for.
 
 The original True-D firmware 3.9D is the work of Furious FPV. This image contains code derived from
-it, together with new code (diversity, RX TUNE, ELRS backpack, sync mod support, fixes). It is
-provided for owners of the True-D V3. Only the compiled image is published here.
+it, together with new code (diversity, RX TUNE, ELRS backpack, sync mod support, goggle control,
+fixes). It is provided for owners of the True-D V3. Only the compiled image is published here.
+
+"Orqa", "HDZero", "ImmersionRC", "rapidFIRE", "Fat Shark" and "ExpressLRS" are names of their owners,
+used only to say which goggles and protocols the goggle control works with. None of them made,
+endorsed or support this firmware.
 
 THE FIRMWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Flashing and flying it is at your
 own risk. Check the picture and the diversity on the ground before you fly.
@@ -75,11 +79,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-### Arduino AVR core 1.6.23 and its SoftwareSerial, SPI and Wire libraries
+### Arduino AVR core 1.6.23 and its EEPROM library
 
 These are licensed under the GNU Lesser General Public License, version 2.1, and are used
 unmodified. Their source code is available from the Arduino project:
-https://github.com/arduino/ArduinoCore-avr (tag `1.6.23`).
+https://github.com/arduino/ArduinoCore-avr (tag `1.6.23`). (MOD 1.15 and earlier also contained
+its SoftwareSerial library; MOD 1.17 does not.)
 
 The image was built with avr-gcc 5.4.0-atmel3.6.1-arduino2 and the Arduino AVR core 1.6.23.
 
