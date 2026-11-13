@@ -17,6 +17,17 @@ endorsed or support this firmware.
 THE FIRMWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Flashing and flying it is at your
 own risk. Check the picture and the diversity on the ground before you fly.
 
+## The no-LED bootloader (`bootloader/`)
+
+`bootloader/ATmegaBOOT_328_noled.hex` and the bootloader part of
+`bootloader/TrueD-MOD-1.17-noled-bootloader.hex` are Arduino's ATmegaBOOT (`ATmegaBOOT_168_atmega328.hex` of the
+Arduino AVR core 1.6.23, based on stk500boot.c, Copyright (c) 2003 Jason P. Kyle) with three instructions of its LED
+code replaced by no-operations.  ATmegaBOOT is free software under the **GNU General Public License, version 2 or
+later**; so is this modified version.  Its source code is `bootloaders/atmega/ATmegaBOOT_168.c` of
+https://github.com/arduino/ArduinoCore-avr (tag `1.6.23`), and the change is
+`bootloader/ATmegaBOOT_168-noled.diff`.  The binary is made from Arduino's own binary by `bootloader/mkpatch.py`,
+which checks the input and changes exactly those three instructions.  No warranty.
+
 ## Third-party software in the image
 
 ### Adafruit GFX Library (modified)

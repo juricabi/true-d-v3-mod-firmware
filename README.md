@@ -139,6 +139,9 @@ The receiver's synthesizer works in 2 MHz steps, so finer tuning is not possible
   `ELRS:ON`.  See [docs/elrs-backpack.md](docs/elrs-backpack.md).
 - **Sync mod:** an LM1881 sync separator on the switched video, its sync outputs to PD2 and PD3.
   About €2–3 of parts, no firmware change.  See [docs/sync-mod.md](docs/sync-mod.md).
+- **No-LED bootloader (optional, extra safety):** removes the stock bootloader's 0.1 s 5 V pulse on bay pin 3 at
+  power-up, for goggles whose processor pins are wired to the bay.  Needs a second (5 V) Arduino as the programmer
+  and one wire soldered to C10 inside the module.  See [docs/bootloader.md](docs/bootloader.md).
 
 ## Status
 

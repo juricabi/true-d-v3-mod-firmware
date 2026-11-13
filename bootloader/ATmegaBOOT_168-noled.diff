@@ -1,0 +1,23 @@
+--- a/ATmegaBOOT_168.c	2026-11-13 14:49:45.105834787 +0100
++++ b/ATmegaBOOT_168.c	2026-11-13 14:49:45.107455283 +0100
+@@ -417,7 +417,7 @@
+ 
+ 
+ 	/* set LED pin as output */
+-	LED_DDR |= _BV(LED);
++	/* LED_DDR |= _BV(LED);   no-LED: D13 stays an input */
+ 
+ 
+ 	/* flash onboard LED to signal entering of bootloader */
+@@ -1046,9 +1046,9 @@
+ void flash_led(uint8_t count)
+ {
+ 	while (count--) {
+-		LED_PORT |= _BV(LED);
++		/* LED_PORT |= _BV(LED);   no-LED */
+ 		_delay_ms(100);
+-		LED_PORT &= ~_BV(LED);
++		/* LED_PORT &= ~_BV(LED);   no-LED */
+ 		_delay_ms(100);
+ 	}
+ }

@@ -35,7 +35,8 @@ rapidFIRE start holds all three pins low for 1 s, which `1-8` reads as channel 1
   and 3 are never outputs.
 - **The stock bootloader** (the part that lets you flash over USB) drives pin 3 at 5 V for 0.1 s and then low for
   ~1.3 s at every power-up, before the firmware starts, whatever firmware is on the module.  It has always done that
-  in every goggle; Fat Shark-style bays are built for 5 V modules.
+  in every goggle; Fat Shark-style bays are built for 5 V modules.  It can be replaced by a no-LED bootloader with
+  a second Arduino as the programmer (optional): [bootloader.md](bootloader.md).
 - **The stock firmware 3.9D and MOD 1.15** drive pin 3 at 5 V for ~6 s at every power-up (their goggle link).
   MOD 1.17 does not.
 
